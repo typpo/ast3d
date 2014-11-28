@@ -51,6 +51,10 @@ function loadModel(name) {
         //var material = new THREE.MeshLambertMaterial({ color: 0xcccccc, shading:THREE.NoShading, wireframe: true, wireframeLinewidth: 10.0, vertexColors: THREE.NoColors});
         var material = new THREE.MeshLambertMaterial({ color: 0xcccccc});
         child.material = material;
+        //scene.add(new THREE.FaceNormalsHelper(child));
+        child.geometry.computeFaceNormals();
+        child.geometry.computeVertexNormals();
+        console.log(child);
       }
     });
 
@@ -83,7 +87,7 @@ function loadModel(name) {
               object.rotation.z = 20* Math.PI / 180;
               window.obj = object
               console.log(obj);
-    scene.add( obj );
+    scene.add(obj);
   });
 }
 
@@ -98,19 +102,20 @@ function init() {
   // scene
   scene = new THREE.Scene();
 
-  var ambient = new THREE.AmbientLight(0xaaaaaa);
-  scene.add( ambient );
 
-  var directionalLight = new THREE.DirectionalLight(0xfdb813);
-  directionalLight.position.set( 0, 0, 3000 );
-  scene.add( directionalLight );
+   // add subtle ambient lighting
+  var ambientLight = new THREE.AmbientLight(0x111111);
+  scene.add(ambientLight);
+
+  // directional lighting
+  var directionalLight = new THREE.DirectionalLight(0xffffd5);
+  directionalLight.position.set(10000, 10000, 10000).normalize();
+  scene.add(directionalLight);
 
   // texture
   manager = new THREE.LoadingManager();
-  manager.onProgress = function( item, loaded, total ) {
-
-    console.log( item, loaded, total );
-
+  manager.onProgress = function(item, loaded, total) {
+    console.log(item, loaded, total);
   };
 
   // texture
