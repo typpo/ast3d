@@ -29,12 +29,10 @@ function initSelect() {
 
 
 function loadModel(name) {
-  var loader = new THREE.OBJLoader( manager );
-  loader.load('obj/' + name + '.txt', function ( object ) {
-
-    object.traverse( function ( child ) {
-
-      if ( child instanceof THREE.Mesh ) {
+  var loader = new THREE.OBJLoader(manager);
+  loader.load('obj/' + name + '.txt', function(object) {
+    object.traverse(function(child) {
+      if (child instanceof THREE.Mesh) {
         console.log('oh hey');
 
         //child.material.map = ast_map;
@@ -50,12 +48,11 @@ function loadModel(name) {
         material.needsUpdate = true;
         child.material = material;
          */
-        var material = new THREE.MeshLambertMaterial({ color: 0xcccccc, shading:THREE.NoShading, wireframe: true, wireframeLinewidth: 10.0, vertexColors: THREE.NoColors});
+        //var material = new THREE.MeshLambertMaterial({ color: 0xcccccc, shading:THREE.NoShading, wireframe: true, wireframeLinewidth: 10.0, vertexColors: THREE.NoColors});
+        var material = new THREE.MeshLambertMaterial({ color: 0xcccccc});
         child.material = material;
-
       }
-
-    } );
+    });
 
 /*
     var geom = object.children[0].geometry;
@@ -82,19 +79,16 @@ function loadModel(name) {
           geometry.uvsNeedUpdate = true;
 */
 
-
               object.rotation.x = 20* Math.PI / 180;
               object.rotation.z = 20* Math.PI / 180;
               window.obj = object
-                console.log(obj);
+              console.log(obj);
     scene.add( obj );
-
-  } );
+  });
 }
 
 
 function init() {
-
   container = document.createElement( 'div' );
   document.body.appendChild( container );
 
@@ -102,7 +96,6 @@ function init() {
   camera.position.z = 1300;
 
   // scene
-
   scene = new THREE.Scene();
 
   var ambient = new THREE.AmbientLight(0xaaaaaa);
@@ -113,9 +106,8 @@ function init() {
   scene.add( directionalLight );
 
   // texture
-
   manager = new THREE.LoadingManager();
-  manager.onProgress = function ( item, loaded, total ) {
+  manager.onProgress = function( item, loaded, total ) {
 
     console.log( item, loaded, total );
 
@@ -123,9 +115,9 @@ function init() {
 
   // texture
   var texture = new THREE.Texture();
-  var loader = new THREE.ImageLoader( manager );
+  var loader = new THREE.ImageLoader(manager);
   var ast_map = THREE.ImageUtils.loadTexture('asteroid_texture.jpg');
-    loader.load( 'asteroid_texture.jpg', function ( image ) {
+    loader.load('asteroid_texture.jpg', function(image) {
       texture.image = image;
       texture.needsUpdate = true;
     } );
@@ -134,15 +126,14 @@ function init() {
   loadModel('pallas');
 
   renderer = new THREE.WebGLRenderer();
-  renderer.setSize( window.innerWidth, window.innerHeight );
-  container.appendChild( renderer.domElement );
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  container.appendChild(renderer.domElement);
 
   controls = new THREE.TrackballControls(camera, renderer.domElement);
   controls.rotateSpeed = 0.5;
   controls.dynamicDampingFactor = 0.5;
 
-  window.addEventListener( 'resize', onWindowResize, false );
-
+  window.addEventListener('resize', onWindowResize, false);
 }
 
 function onWindowResize() {
@@ -152,11 +143,11 @@ function onWindowResize() {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
 
-  renderer.setSize( window.innerWidth, window.innerHeight );
+  renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
 function animate() {
-  requestAnimationFrame( animate );
+  requestAnimationFrame(animate);
   controls.update(camera);
   render();
 }
@@ -164,10 +155,10 @@ function animate() {
 function render() {
   if (typeof obj !== 'undefined') {
     obj.rotation.x += (0.1*(Math.PI / 180));
-    obj.rotation.x %=360;
+    obj.rotation.x %= 360;
   }
 
-  camera.lookAt( scene.position );
+  camera.lookAt(scene.position);
 
-  renderer.render( scene, camera );
+  renderer.render(scene, camera);
 }
