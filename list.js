@@ -17,7 +17,7 @@ FILES = [
 "irene.txt",
 "iris.txt",
 "isis.txt",
-"juno.obj.txt",
+"juno.txt",
 "kalliope.txt",
 "laetitia.txt",
 "leda.txt",
