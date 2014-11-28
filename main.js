@@ -4,7 +4,7 @@ var rotateAngle = Math.PI / 2 * delta;   // pi/2 radians (90 degrees) per second
 
 var container, stats;
 
-var camera, scene, renderer, manager;
+var camera, scene, renderer, manager, controls;
 
 var mouseX = 0, mouseY = 0;
 
@@ -137,7 +137,11 @@ function init() {
   renderer.setSize( window.innerWidth, window.innerHeight );
   container.appendChild( renderer.domElement );
 
-  document.addEventListener( 'mousemove', onDocumentMouseMove, false );
+  controls = new THREE.TrackballControls(camera, renderer.domElement);
+  controls.rotateSpeed = 0.5;
+  controls.dynamicDampingFactor = 0.5;
+
+  //document.addEventListener( 'mousemove', onDocumentMouseMove, false );
 
   window.addEventListener( 'resize', onWindowResize, false );
 
@@ -160,6 +164,7 @@ function onDocumentMouseMove( event ) {
 
 function animate() {
   requestAnimationFrame( animate );
+  controls.update(camera);
   render();
 }
 
