@@ -76,7 +76,7 @@
 
       function loadModel(name) {
         var loader = new THREE.OBJLoader( manager );
-        loader.load( name + '.txt', function ( object ) {
+        loader.load('obj/' + name + '.txt', function ( object ) {
 
           object.traverse( function ( child ) {
 
