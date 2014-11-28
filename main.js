@@ -163,7 +163,7 @@ function animate() {
 
 function render() {
   if (typeof obj !== 'undefined') {
-    obj.rotation.x += (0.2*(Math.PI / 180));
+    obj.rotation.x += (0.1*(Math.PI / 180));
     obj.rotation.x %=360;
   }
 
