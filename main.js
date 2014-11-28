@@ -1,3 +1,5 @@
+var DEFAULT_OBJECT = 'pallas';
+
 var clock = new THREE.Clock();
 var delta = clock.getDelta(); // seconds.
 var rotateAngle = Math.PI / 2 * delta;   // pi/2 radians (90 degrees) per second
@@ -5,12 +7,13 @@ var rotateAngle = Math.PI / 2 * delta;   // pi/2 radians (90 degrees) per second
 var container, stats;
 
 var camera, scene, renderer, manager, controls;
+var directionalLight;
+var astMap;
 
 var mouseX = 0, mouseY = 0;
 
 var windowHalfX = window.innerWidth / 2;
 var windowHalfY = window.innerHeight / 2;
-
 
 initSelect();
 init();
@@ -21,6 +24,7 @@ function initSelect() {
     $('<option>').html(FILES[i].replace('.txt', '')).appendTo($('#asteroid'));
   }
 
+  $('#asteroid').val(DEFAULT_OBJECT);
   $('#asteroid').change(function() {
     scene.remove(window.obj);
     loadModel($(this).val());
@@ -34,60 +38,22 @@ function loadModel(name) {
     object.traverse(function(child) {
       if (child instanceof THREE.Mesh) {
         console.log('oh hey');
-
-        //child.material.map = ast_map;
-
-/*
-        child.material.map = THREE.ImageUtils.loadTexture( 'asteroid_texture.jpg');
-        child.material.needsUpdate = true;
-        var material = new THREE.MeshBasicMaterial({ color: 0xcccccc, shading:THREE.FlatShading, wireframe: false});
-*/
-        /*
-        material = new THREE.MeshBasicMaterial({map: ast_map});
-        console.log(material);
-        material.needsUpdate = true;
-        child.material = material;
-         */
-        //var material = new THREE.MeshLambertMaterial({ color: 0xcccccc, shading:THREE.NoShading, wireframe: true, wireframeLinewidth: 10.0, vertexColors: THREE.NoColors});
         var material = new THREE.MeshLambertMaterial({ color: 0xcccccc});
         child.material = material;
-        //scene.add(new THREE.FaceNormalsHelper(child));
         child.geometry.computeFaceNormals();
         child.geometry.computeVertexNormals();
-        console.log(child);
+        child.geometry.computeBoundingBox();
       }
     });
+    object.rotation.x = 20 * Math.PI / 180;
+    object.rotation.z = 20 * Math.PI / 180;
+    scene.add(object);
+    window.obj = object; // TODO just make this a var
 
-/*
-    var geom = object.children[0].geometry;
-
-    geometry.faceVertexUvs[0] = [];
-           for(var i = 0; i < geometry.faces.length; i++){
-
-
-               geometry.faceVertexUvs[0].push([
-        new THREE.Vector2( 0,0 ),
-        new THREE.Vector2( 0,1 ),
-        new THREE.Vector2( 1,1),
-
-      ]);
-
-
-               geometry.faces[i].materialIndex = i;
-               materials.push(new THREE.MeshBasicMaterial({map:ast_map}));
-
-           }
-  geometry.computeFaceNormals();
-
-          geometry.dynamic = true;
-          geometry.uvsNeedUpdate = true;
-*/
-
-              object.rotation.x = 20* Math.PI / 180;
-              object.rotation.z = 20* Math.PI / 180;
-              window.obj = object
-              console.log(obj);
-    scene.add(obj);
+    var boundingBox = object.children[0].geometry.boundingBox;
+    camera.position.x = boundingBox.max.x * 3;
+    camera.position.y = boundingBox.max.y * 3;
+    camera.position.z = boundingBox.max.z * 3;
   });
 }
 
@@ -96,21 +62,25 @@ function init() {
   container = document.createElement( 'div' );
   document.body.appendChild( container );
 
-  camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 2000 );
+  camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 2000);
   camera.position.z = 1300;
 
   // scene
   scene = new THREE.Scene();
 
-
-   // add subtle ambient lighting
-  var ambientLight = new THREE.AmbientLight(0x111111);
+  // add subtle ambient lighting
+  var ambientLight = new THREE.AmbientLight(0x333333);
   scene.add(ambientLight);
 
   // directional lighting
-  var directionalLight = new THREE.DirectionalLight(0xffffd5);
+  //var directionalLight = new THREE.DirectionalLight(0x855E42);
+  directionalLight = new THREE.DirectionalLight(0xeeeec4);
   directionalLight.position.set(10000, 10000, 10000).normalize();
   scene.add(directionalLight);
+
+  var directionalLight2 = new THREE.DirectionalLight(0x333333);
+  directionalLight2.position.set(-10000, -10000, -10000).normalize();
+  scene.add(directionalLight2);
 
   // texture
   manager = new THREE.LoadingManager();
@@ -121,14 +91,14 @@ function init() {
   // texture
   var texture = new THREE.Texture();
   var loader = new THREE.ImageLoader(manager);
-  var ast_map = THREE.ImageUtils.loadTexture('asteroid_texture.jpg');
+  astMap = THREE.ImageUtils.loadTexture('asteroid_texture.jpg');
     loader.load('asteroid_texture.jpg', function(image) {
       texture.image = image;
       texture.needsUpdate = true;
     } );
 
   // model
-  loadModel('pallas');
+  loadModel(DEFAULT_OBJECT);
 
   renderer = new THREE.WebGLRenderer();
   renderer.setSize(window.innerWidth, window.innerHeight);
@@ -159,9 +129,12 @@ function animate() {
 
 function render() {
   if (typeof obj !== 'undefined') {
-    obj.rotation.x += (0.1*(Math.PI / 180));
+    obj.rotation.x += (0.2*(Math.PI / 180));
     obj.rotation.x %= 360;
   }
+  //var timer = 0.0001 * Date.now();
+  //directionalLight.position.x = 10000 + Math.sin(timer) * 75;
+  //directionalLight.position.z = 10000 + Math.cos(timer) * 60;
 
   camera.lookAt(scene.position);
 
