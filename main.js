@@ -141,8 +141,6 @@ function init() {
   controls.rotateSpeed = 0.5;
   controls.dynamicDampingFactor = 0.5;
 
-  //document.addEventListener( 'mousemove', onDocumentMouseMove, false );
-
   window.addEventListener( 'resize', onWindowResize, false );
 
 }
@@ -157,11 +155,6 @@ function onWindowResize() {
   renderer.setSize( window.innerWidth, window.innerHeight );
 }
 
-function onDocumentMouseMove( event ) {
-  mouseX = ( event.clientX - windowHalfX ) / 2;
-  mouseY = ( event.clientY - windowHalfY ) / 2;
-}
-
 function animate() {
   requestAnimationFrame( animate );
   controls.update(camera);
@@ -170,12 +163,9 @@ function animate() {
 
 function render() {
   if (typeof obj !== 'undefined') {
-          obj.rotation.x += (0.2*(Math.PI / 180));
-          obj.rotation.x %=360;
+    obj.rotation.x += (0.2*(Math.PI / 180));
+    obj.rotation.x %=360;
   }
-
-  camera.position.x += ( mouseX - camera.position.x ) * .05;
-  camera.position.y += ( - mouseY - camera.position.y ) * .05;
 
   camera.lookAt( scene.position );
 
