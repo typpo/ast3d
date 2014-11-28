@@ -38,7 +38,7 @@ function loadModel(name) {
     object.traverse(function(child) {
       if (child instanceof THREE.Mesh) {
         console.log('oh hey');
-        var material = new THREE.MeshLambertMaterial({ color: 0xcccccc});
+        var material = new THREE.MeshLambertMaterial({color: 0xcccccc});
         child.material = material;
         child.geometry.computeFaceNormals();
         child.geometry.computeVertexNormals();
