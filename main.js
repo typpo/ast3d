@@ -1,4 +1,5 @@
-var DEFAULT_OBJECT = 'pallas';
+var DEFAULT_OBJECT = window.location.hash.length > 1 ?
+    window.location.hash.substr(1) : 'pallas';
 
 var clock = new THREE.Clock();
 var delta = clock.getDelta(); // seconds.
@@ -27,7 +28,9 @@ function initSelect() {
   $('#asteroid').val(DEFAULT_OBJECT);
   $('#asteroid').change(function() {
     scene.remove(window.obj);
-    loadModel($(this).val());
+    var name = $(this).val();
+    loadModel(name);
+    window.location.hash = '#' + name;
   });
 }
 
