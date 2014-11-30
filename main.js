@@ -40,7 +40,6 @@ function loadModel(name) {
   loader.load('obj/' + name + '.txt', function(object) {
     object.traverse(function(child) {
       if (child instanceof THREE.Mesh) {
-        console.log('oh hey');
         var material = new THREE.MeshLambertMaterial({color: 0xcccccc});
         child.material = material;
         child.geometry.computeFaceNormals();
@@ -60,6 +59,27 @@ function loadModel(name) {
   });
 }
 
+function createSkybox(texture) {
+  var size = 15000;
+
+  var cubemap = THREE.ShaderLib.cube;
+  cubemap.uniforms.tCube.value = texture;
+
+  var mat = new THREE.ShaderMaterial({
+    fragmentShader: cubemap.fragmentShader,
+    vertexShader: cubemap.vertexShader,
+    uniforms: cubemap.uniforms,
+    depthWrite: false,
+    side: THREE.BackSide
+  });
+
+  var geo = new THREE.CubeGeometry(size, size, size);
+
+  var mesh = new THREE.Mesh(geo, mat);
+  scene.add(mesh);
+
+  return mesh;
+}
 
 function init() {
   container = document.createElement( 'div' );
@@ -77,7 +97,8 @@ function init() {
 
   // directional lighting
   //var directionalLight = new THREE.DirectionalLight(0x855E42);
-  directionalLight = new THREE.DirectionalLight(0xeeeec4);
+  //directionalLight = new THREE.DirectionalLight(0xeeeec4);
+  directionalLight = new THREE.DirectionalLight(0xE8E8F0);
   directionalLight.position.set(10000, 10000, 10000).normalize();
   scene.add(directionalLight);
 
@@ -85,13 +106,23 @@ function init() {
   directionalLight2.position.set(-10000, -10000, -10000).normalize();
   scene.add(directionalLight2);
 
-  // texture
+  // loaders
   manager = new THREE.LoadingManager();
   manager.onProgress = function(item, loaded, total) {
     console.log(item, loaded, total);
   };
 
-  // texture
+  // skybox
+  createSkybox([
+    'img/starfield/front.png',
+    'img/starfield/back.png',
+    'img/starfield/left.png',
+    'img/starfield/right.png',
+    'img/starfield/top.png',
+    'img/starfield/bottom.png'
+  ]);
+
+  // asteroid texture
   var texture = new THREE.Texture();
   var loader = new THREE.ImageLoader(manager);
   astMap = THREE.ImageUtils.loadTexture('asteroid_texture.jpg');
