@@ -10,6 +10,7 @@ var container, stats;
 var camera, scene, renderer, manager, controls;
 var directionalLight;
 var astMap;
+var asteroidMaterials;
 
 var mouseX = 0, mouseY = 0;
 
@@ -37,6 +38,7 @@ function initSelect() {
 
 function loadModel(name) {
   var loader = new THREE.OBJLoader(manager);
+  asteroidMaterials = [];
   loader.load('obj/' + name + '.txt', function(object) {
     object.traverse(function(child) {
       if (child instanceof THREE.Mesh) {
@@ -45,6 +47,7 @@ function loadModel(name) {
         child.geometry.computeFaceNormals();
         child.geometry.computeVertexNormals();
         child.geometry.computeBoundingBox();
+        asteroidMaterials.push(material);
       }
     });
     object.rotation.x = 20 * Math.PI / 180;
@@ -81,9 +84,30 @@ function createSkybox(texture) {
   return mesh;
 }
 
+function createGui() {
+  var gui = new dat.GUI();
+  // TODO add option for auto scale.
+  // TODO add zoom-to-asteroid option.
+  uiOptions = {
+    'Wireframe': false,
+    'Autoscale': true,
+  };
+  window.uiOptions = uiOptions;
+  gui.add(uiOptions, 'Wireframe').onChange(function(value) {
+    asteroidMaterials.map(function(mat) {
+      mat.wireframe = value;
+    });
+  });
+
+  // Hide gui initially for mobile
+  if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+    dat.GUI.toggleHide();
+  }
+}
+
 function init() {
-  container = document.createElement( 'div' );
-  document.body.appendChild( container );
+  container = document.createElement('div');
+  document.body.appendChild(container);
 
   camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 2000);
   camera.position.z = 1300;
@@ -121,6 +145,9 @@ function init() {
     'img/starfield/top.png',
     'img/starfield/bottom.png'
   ]);
+
+  // datgui
+  createGui();
 
   // asteroid texture
   var texture = new THREE.Texture();
