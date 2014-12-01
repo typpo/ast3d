@@ -9,8 +9,8 @@ var container, stats;
 
 var camera, scene, renderer, manager, controls;
 var directionalLight;
-var astMap;
 var asteroidMaterials;
+var autoScale = true;
 
 var mouseX = 0, mouseY = 0;
 
@@ -55,11 +55,17 @@ function loadModel(name) {
     scene.add(object);
     window.obj = object; // TODO just make this a var
 
-    var boundingBox = object.children[0].geometry.boundingBox;
-    camera.position.x = boundingBox.max.x * 3;
-    camera.position.y = boundingBox.max.y * 3;
-    camera.position.z = boundingBox.max.z * 3;
+    if (autoScale) {
+      zoomToFitObject();
+    }
   });
+}
+
+function zoomToFitObject() {
+  var boundingBox = obj.children[0].geometry.boundingBox;
+  camera.position.x = boundingBox.max.x * 3;
+  camera.position.y = boundingBox.max.y * 3;
+  camera.position.z = boundingBox.max.z * 3;
 }
 
 function createSkybox(texture) {
@@ -86,11 +92,10 @@ function createSkybox(texture) {
 
 function createGui() {
   var gui = new dat.GUI();
-  // TODO add option for auto scale.
-  // TODO add zoom-to-asteroid option.
   uiOptions = {
     'Wireframe': false,
     'Autoscale': true,
+    'Zoom to fit': zoomToFitObject,
   };
   window.uiOptions = uiOptions;
   gui.add(uiOptions, 'Wireframe').onChange(function(value) {
@@ -98,6 +103,10 @@ function createGui() {
       mat.wireframe = value;
     });
   });
+  gui.add(uiOptions, 'Autoscale').onChange(function(value) {
+    autoScale = value;
+  });
+  gui.add(uiOptions, 'Zoom to fit');
 
   // Hide gui initially for mobile
   if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
@@ -137,6 +146,7 @@ function init() {
   };
 
   // skybox
+  /*
   createSkybox([
     'img/starfield/front.png',
     'img/starfield/back.png',
@@ -145,6 +155,7 @@ function init() {
     'img/starfield/top.png',
     'img/starfield/bottom.png'
   ]);
+  */
 
   // datgui
   createGui();
@@ -152,11 +163,6 @@ function init() {
   // asteroid texture
   var texture = new THREE.Texture();
   var loader = new THREE.ImageLoader(manager);
-  astMap = THREE.ImageUtils.loadTexture('asteroid_texture.jpg');
-    loader.load('asteroid_texture.jpg', function(image) {
-      texture.image = image;
-      texture.needsUpdate = true;
-    } );
 
   // model
   loadModel(DEFAULT_OBJECT);
