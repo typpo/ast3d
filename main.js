@@ -91,6 +91,11 @@ function createSkybox(texture) {
 }
 
 function createGui() {
+  // No gui for mobile
+  if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+    return;
+  }
+
   var gui = new dat.GUI();
   uiOptions = {
     'Wireframe': false,
@@ -107,11 +112,6 @@ function createGui() {
     autoScale = value;
   });
   gui.add(uiOptions, 'Zoom to fit');
-
-  // Hide gui initially for mobile
-  if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-    dat.GUI.toggleHide();
-  }
 }
 
 function init() {
