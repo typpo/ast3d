@@ -19,6 +19,7 @@ FILES = [
 "isis.txt",
 "juno.txt",
 "kalliope.txt",
+"kleo.txt",
 "laetitia.txt",
 "leda.txt",
 "lutetia.txt",
