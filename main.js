@@ -1,5 +1,5 @@
 var DEFAULT_OBJECT = window.location.hash.length > 1 ?
-    window.location.hash.substr(1) : 'pallas';
+    window.location.hash.substr(1) : 'toutatis';
 
 var clock = new THREE.Clock();
 var delta = clock.getDelta(); // seconds.
@@ -63,9 +63,9 @@ function loadModel(name) {
 
 function zoomToFitObject() {
   var boundingBox = obj.children[0].geometry.boundingBox;
-  camera.position.x = boundingBox.max.x * 3;
-  camera.position.y = boundingBox.max.y * 3;
-  camera.position.z = boundingBox.max.z * 3;
+  camera.position.x = boundingBox.max.x * 3.7;
+  camera.position.y = boundingBox.max.y * 3.7;
+  camera.position.z = boundingBox.max.z * 3.7;
 }
 
 function createSkybox(texture) {
