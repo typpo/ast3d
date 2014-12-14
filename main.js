@@ -12,12 +12,14 @@ var directionalLight;
 var asteroidMaterials;
 var autoScale = true;
 
+// In embedded mode, we hide controls.
+var embeddedMode = isIFrame();
+
 var mouseX = 0, mouseY = 0;
 
 var windowHalfX = window.innerWidth / 2;
 var windowHalfY = window.innerHeight / 2;
 
-initSelect();
 init();
 animate();
 
@@ -157,8 +159,12 @@ function init() {
   ]);
   */
 
-  // datgui
-  createGui();
+  // UI stuff
+  if (!embeddedMode) {
+    initSelect();
+    createGui();
+    document.getElementById('info').style.display = 'block';
+  }
 
   // asteroid texture
   var texture = new THREE.Texture();
@@ -206,4 +212,22 @@ function render() {
   camera.lookAt(scene.position);
 
   renderer.render(scene, camera);
+}
+
+function isIFrame() {
+  if (!!getParameterByName('iframe')) {
+    return true;
+  }
+  try {
+    return window.self !== window.top;
+  } catch (e) {
+    return true;
+  }
+}
+
+function getParameterByName(name) {
+  name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+  var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+      results = regex.exec(location.search);
+  return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
 }

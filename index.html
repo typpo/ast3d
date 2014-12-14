@@ -21,14 +21,19 @@
         text-align: center;
         display:block;
       }
-      #info a, .button { color: #f00; font-weight: bold; text-decoration: underline; cursor: pointer }
+      #info a, .button {
+        color: #f00;
+        font-weight: bold;
+        text-decoration: underline;
+        cursor: pointer
+      }
     </style>
   </head>
 
   <body>
-    <div id="info">
-            Asteroid Model Viewer
-            <select id="asteroid"></select>
+    <div id="info" style="display:none;">
+      Asteroid Model Viewer
+      <select id="asteroid"></select>
     </div>
 
     <script src="http://threejs.org/build/three.min.js"></script>
