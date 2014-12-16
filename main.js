@@ -1,10 +1,6 @@
 var DEFAULT_OBJECT = window.location.hash.length > 1 ?
     window.location.hash.substr(1) : getParameterByName('obj') || 'toutatis';
 
-var clock = new THREE.Clock();
-var delta = clock.getDelta(); // seconds.
-var rotateAngle = Math.PI / 2 * delta;   // pi/2 radians (90 degrees) per second
-
 var container, stats;
 
 var camera, scene, renderer, manager, controls;
@@ -70,28 +66,6 @@ function zoomToFitObject() {
   camera.position.z = boundingBox.max.z * 3.7;
 }
 
-function createSkybox(texture) {
-  var size = 15000;
-
-  var cubemap = THREE.ShaderLib.cube;
-  cubemap.uniforms.tCube.value = texture;
-
-  var mat = new THREE.ShaderMaterial({
-    fragmentShader: cubemap.fragmentShader,
-    vertexShader: cubemap.vertexShader,
-    uniforms: cubemap.uniforms,
-    depthWrite: false,
-    side: THREE.BackSide
-  });
-
-  var geo = new THREE.CubeGeometry(size, size, size);
-
-  var mesh = new THREE.Mesh(geo, mat);
-  scene.add(mesh);
-
-  return mesh;
-}
-
 function createGui() {
   // No gui for mobile
   if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
@@ -147,18 +121,6 @@ function init() {
     console.log(item, loaded, total);
   };
 
-  // skybox
-  /*
-  createSkybox([
-    'img/starfield/front.png',
-    'img/starfield/back.png',
-    'img/starfield/left.png',
-    'img/starfield/right.png',
-    'img/starfield/top.png',
-    'img/starfield/bottom.png'
-  ]);
-  */
-
   // UI stuff
   if (!embeddedMode) {
     initSelect();
@@ -205,9 +167,6 @@ function render() {
     obj.rotation.x += (0.2*(Math.PI / 180));
     obj.rotation.x %= 360;
   }
-  //var timer = 0.0001 * Date.now();
-  //directionalLight.position.x = 10000 + Math.sin(timer) * 75;
-  //directionalLight.position.z = 10000 + Math.cos(timer) * 60;
 
   camera.lookAt(scene.position);
 
