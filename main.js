@@ -1,5 +1,5 @@
 var DEFAULT_OBJECT = window.location.hash.length > 1 ?
-    window.location.hash.substr(1) : 'toutatis';
+    window.location.hash.substr(1) : getParameterByName('obj') || 'toutatis';
 
 var clock = new THREE.Clock();
 var delta = clock.getDelta(); // seconds.
