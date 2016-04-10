@@ -1,4 +1,5 @@
 venv
+data/damit_scrape
 
 ### vim ###
 [._]*.s[a-w][a-z]
