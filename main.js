@@ -37,7 +37,7 @@ function initSelect() {
 function loadModel(name) {
   var loader = new THREE.OBJLoader(manager);
   asteroidMaterials = [];
-  loader.load('obj/' + name + '.txt', function(object) {
+  loader.load('data/' + name + '.txt', function(object) {
     object.traverse(function(child) {
       if (child instanceof THREE.Mesh) {
         var material = new THREE.MeshLambertMaterial({color: 0xcccccc});
