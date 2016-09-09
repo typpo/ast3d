@@ -926,5 +926,6 @@ FILES = [
   "damit_scrape/Yvonne.txt",
   "damit_scrape/Zerlina.txt",
   "damit_scrape/Zita.txt",
-  "damit_scrape/Zoya.txt"
+  "damit_scrape/Zoya.txt",
+  "other/bennu.txt"
 ];
